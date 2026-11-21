@@ -1,56 +1,43 @@
-# Microservicio de Alquiler de Coches - Spring Boot 3 con Java 17 y MySQL
+# Car Rental — Java / Spring Boot (work in progress)
 
-Este proyecto es un ejercicio de aprendizaje para desarrollar un microservicio de alquiler de coches utilizando Spring Boot 3, Java 17 y MySQL. El objetivo principal es practicar y demostrar mis habilidades en el desarrollo de microservicios, la persistencia de datos con Hibernate y el uso de las últimas características de Java.
+**English:** Learning project for modeling a car-rental domain with Java 17, Spring Boot and JPA. The repository currently contains an application entry point and domain entities; **it does not yet expose rental-management REST endpoints**.
 
-## Descripción
+**Español:** Proyecto de aprendizaje para modelar el dominio de alquiler de vehículos con Java 17, Spring Boot y JPA. Actualmente incluye la aplicación base y entidades del dominio; **todavía no implementa endpoints REST para la gestión de alquileres**.
 
-Este microservicio permite gestionar el alquiler de coches, incluyendo:
+## Current implementation / Estado actual
 
-* **Gestión de clientes:** Registro, modificación y consulta de información de clientes.
-* **Gestión de vehículos:** Registro, modificación y consulta de información de vehículos disponibles.
-* **Gestión de alquileres:** Registro, modificación y consulta de alquileres, incluyendo la asignación de vehículos a clientes.
-* **Consulta de disponibilidad:** Permite a los clientes consultar la disponibilidad de vehículos por fechas.
-* **Implementación de las relaciones y clases definidas en el diagrama UML proporcionado.**
+- Spring Boot application entry point.
+- JPA domain classes `Car`, `Driver` and an initial `DriverBus` class.
+- MySQL datasource configuration.
+- Basic Spring context test (not a complete integration test).
 
-El proyecto sigue el diagrama UML proporcionado como guía para la implementación de las clases y relaciones entre ellas.
+**Not implemented yet:** CRUD controllers, booking workflow, vehicle availability search, authentication, and complete tests. The entity mappings are also incomplete and need review before the application can be considered runnable end to end.
 
-## Diagrama UML
+## Tech stack
 
-![Diagrama UML del sistema de alquiler de coches](images/uml-car-rental.png)
+Java 17 · Spring Boot 3.4.3 · Gradle · Spring Data JPA / Hibernate · MySQL · Lombok
 
-## Stack Tecnológico
+## Local setup (development)
 
-* **Lenguaje:** Java 17
-* **Framework:** Spring Boot 3
-* **Base de datos:** MySQL
-* **Persistencia:** Hibernate 
+1. Install JDK 17 and MySQL.
+2. Create a local MySQL database named `carrental`.
+3. Set `DB_USERNAME` and `DB_PASSWORD` environment variables for your local database. **Do not commit actual credentials.**
+4. Run `./gradlew bootRun` (Windows: `gradlew.bat bootRun`).
 
-## Funcionalidades Principales
+> The project is not yet feature-complete; startup may require fixing the unfinished JPA entity relationships. The repository was reviewed statically, not executed.
 
-* Endpoints REST para la gestión de clientes, vehículos y alquileres.
-* Persistencia de datos en MySQL utilizando Hibernate.
-* Manejo de excepciones y validaciones.
-* Implementación de patrones de diseño (DAO, DTO, etc.).
-* Implementación de las relaciones definidas en el UML, como composición, agregación, herencia, asociación, realización y dependencia.
+## Next steps
 
-## Patrones de Diseño
+1. Correct and test JPA entity relationships.
+2. Implement repositories, services, controllers and validation.
+3. Add unit and integration tests.
+4. Document REST endpoints with OpenAPI.
+5. Add an example configuration and clear local setup instructions.
 
-* **DAO (Data Access Object):** Para la capa de acceso a datos.
-* **DTO (Data Transfer Object):** Para la transferencia de datos entre capas.
-* **Implementación de las relaciones del UML:** Se han implementado las relaciones de composición, agregación, herencia, asociación, realización y dependencia según el diagrama UML proporcionado.
+## Diagram
 
-## Próximos Pasos
+![Car rental UML](images/uml-car-rental.png)
 
-* Implementar pruebas unitarias y de integración.
-* Agregar autenticación y autorización.
-* Mejorar la interfaz de usuario (si se incluye una).
-* Documentar la API con Swagger o OpenAPI.
-* Implementar servicios para la generación de informes y estadísticas.
+---
 
-## Autor
-
-[samantonio91] ((https://github.com/samantonio91))
-
-## Contacto
-
-[sam.antonio.91@gmail.com]
+**Portfolio note:** This is a learning exercise, not a production booking system.
