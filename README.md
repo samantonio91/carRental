@@ -1,43 +1,63 @@
-# Car Rental — Java / Spring Boot (work in progress)
+# Car Rental UML — Java OOP Exercise
 
-**English:** Learning project for modeling a car-rental domain with Java 17, Spring Boot and JPA. The repository currently contains an application entry point and domain entities; **it does not yet expose rental-management REST endpoints**.
+> **Status:** a Java 17 **object-oriented programming exercise**, not a production-ready car rental API. This branch implements the actual methods and relationships from [the provided UML diagram](images/uml-car-rental.png).
 
-**Español:** Proyecto de aprendizaje para modelar el dominio de alquiler de vehículos con Java 17, Spring Boot y JPA. Actualmente incluye la aplicación base y entidades del dominio; **todavía no implementa endpoints REST para la gestión de alquileres**.
+The diagram is labeled *Sistema de alquiler de coches online*, but its classes primarily demonstrate **composition, aggregation, inheritance, interfaces, association, and dependency**. Building booking REST endpoints is a separate future project, not part of this UML.
 
-## Current implementation / Estado actual
+## Implemented UML methods
 
-- Spring Boot application entry point.
-- JPA domain classes `Car`, `Driver` and an initial `DriverBus` class.
-- MySQL datasource configuration.
-- Basic Spring context test (not a complete integration test).
+| Original UML | English code | Java class |
+| --- | --- | --- |
+| `Humano.setHead(Cabeza)` | `setHead(Head)` | `Human` |
+| `Humano.setBody(Cuerpo)` | `setBody(Body)` | `Human` |
+| `Humano.display()` | `display()` | `Human` |
+| `Conductor.addCar(Coche)` | `addCar(Car)` | `Driver` |
+| `Conductor de autobús.wearClothes(Ropa)` | `wearClothes(Clothes)` | `BusDriver` |
+| `Conductor de autobús.wearHat(Sombrero)` | `wearHat(Hat)` | `BusDriver` |
+| `Conductor de autobús.show()` | `show()` | `BusDriver` |
+| `Vehículo.run()` | `run()` | `Vehicle` interface |
+| `Barco.run()` | `run()` | `Boat` |
+| `Coche.addDriver(Conductor)` | `addDriver(Driver)` | `Car` |
 
-**Not implemented yet:** CRUD controllers, booking workflow, vehicle availability search, authentication, and complete tests. The entity mappings are also incomplete and need review before the application can be considered runnable end to end.
+`Car.run()` implements the `Vehicle.run()` contract as well.
 
-## Tech stack
+## Relationships
 
-Java 17 · Spring Boot 3.4.3 · Gradle · Spring Data JPA / Hibernate · MySQL · Lombok
+- **Composition:** `Human` owns references to `Head` and `Body` (assigned through the UML setters).
+- **Inheritance:** `BusDriver extends Driver extends Human`; `Bus` and `Taxi` extend `Car`.
+- **Aggregation:** `BusDriver` references externally created `Clothes` and `Hat`.
+- **Interface implementation:** `Car` and `Boat` implement `Vehicle`.
+- **Association:** `Driver.addCar()` and `Car.addDriver()` keep both sides synchronized and do not allow duplicate references.
+- **Dependency:** `Car.runWith(Petroleum)` accepts a fuel type as a method argument without storing it.
 
-## Local setup (development)
+### Design notes / Clarifications
 
-1. Install JDK 17 and MySQL.
-2. Create a local MySQL database named `carrental`.
-3. Set `DB_USERNAME` and `DB_PASSWORD` environment variables for your local database. **Do not commit actual credentials.**
-4. Run `./gradlew bootRun` (Windows: `gradlew.bat bootRun`).
+The UML uses a dashed realization arrow for `Conductor` → `Humano` even though `Humano` is shown as a concrete class: Java uses **class inheritance** here. Some multiplicities say 1:1 while the driver/car properties are arrays: this implementation follows the **array/list** properties and permits multiple associations. Since the UML does not specify return types, `run()`, `display()` and `show()` return strings for observable, testable behavior.
 
-> The project is not yet feature-complete; startup may require fixing the unfinished JPA entity relationships. The repository was reviewed statically, not executed.
+This exercise deliberately does **not** expose HTTP endpoints or use JPA/MySQL yet. The original Spring Boot entry point is preserved, but the learning model is pure Java. The previous, incomplete entity classes were replaced by the UML domain classes. A later REST/database layer can be added separately.
 
-## Next steps
+## Run tests
 
-1. Correct and test JPA entity relationships.
-2. Implement repositories, services, controllers and validation.
-3. Add unit and integration tests.
-4. Document REST endpoints with OpenAPI.
-5. Add an example configuration and clear local setup instructions.
+Requires JDK 17. No database or credentials are needed.
 
-## Diagram
+```bash
+./gradlew test
+```
 
-![Car rental UML](images/uml-car-rental.png)
+On Windows:
 
----
+```powershell
+gradlew.bat test
+```
 
-**Portfolio note:** This is a learning exercise, not a production booking system.
+CI runs these tests on each pull request.
+
+## What's next?
+
+- Build an actual rental domain (customers, vehicles, reservations, availability) in a separate feature.
+- Introduce REST controllers, validation, persistence and integration testing only when that domain is designed.
+- If persisted data from the older JPA prototype exists, plan an explicit migration rather than assuming these pure-Java classes map to the old tables.
+
+## Spanish reference
+
+See [README.es.md](README.es.md). Original UML: [images/uml-car-rental.png](images/uml-car-rental.png).

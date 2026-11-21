@@ -1,34 +1,37 @@
 package com.samantonio9.carRental.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-import java.io.Serializable;
+/** Coche in the UML. A Car implements Vehicle and associates with Drivers. */
+public class Car implements Vehicle {
+    private final List<Driver> drivers = new ArrayList<>();
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Builder
-@Table(name = "tab_car")
-public class Car implements Serializable {
+    public void addDriver(Driver driver) {
+        Objects.requireNonNull(driver, "driver must not be null");
+        if (!drivers.contains(driver)) {
+            drivers.add(driver);
+        }
+        // Keep both ends of the UML association consistent.
+        if (!driver.getCars().contains(this)) {
+            driver.addCar(this);
+        }
+    }
 
-    private static final long serialVersionUID = 1L;
+    public List<Driver> getDrivers() {
+        return Collections.unmodifiableList(drivers);
+    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty("car_id")
-    @Column(name = "car_id")
-    private Long carId;
+    @Override
+    public String run() {
+        return "Car is running";
+    }
 
-    private String type;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    private Driver driver;
-
+    /** Demonstrates dependency on Petroleum without owning it as a field. */
+    public String runWith(Petroleum petroleum) {
+        Objects.requireNonNull(petroleum, "petroleum must not be null");
+        return run() + " using " + petroleum.getType();
+    }
 }

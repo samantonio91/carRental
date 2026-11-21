@@ -1,26 +1,26 @@
 package com.samantonio9.carRental.domain;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
-import java.io.Serializable;
+/** Conductor: inherits Human and keeps an association to its cars. */
+public class Driver extends Human {
+    private final List<Car> cars = new ArrayList<>();
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-@Builder
-@Table(name = "tab_driver")
-public class Driver implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public void addCar(Car car) {
+        Objects.requireNonNull(car, "car must not be null");
+        if (!cars.contains(car)) {
+            cars.add(car);
+        }
+        // Keep both ends of the UML association consistent.
+        if (!car.getDrivers().contains(this)) {
+            car.addDriver(this);
+        }
+    }
 
-    @Id
-    @Column(name = "driver_id")
-    @JoinColumn(name = "driver_id")
-    private Long driverId;
-
-
+    public List<Car> getCars() {
+        return Collections.unmodifiableList(cars);
+    }
 }

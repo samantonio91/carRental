@@ -1,4 +1,6 @@
 package com.samantonio9.carRental.domain;
 
-public class DriverBus {
+/** @deprecated Use the conventional English name BusDriver instead. */
+@Deprecated
+public class DriverBus extends BusDriver {
 }
