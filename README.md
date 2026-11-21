@@ -1,56 +1,63 @@
-# Microservicio de Alquiler de Coches - Spring Boot 3 con Java 17 y MySQL
+# Car Rental UML — Java OOP Exercise
 
-Este proyecto es un ejercicio de aprendizaje para desarrollar un microservicio de alquiler de coches utilizando Spring Boot 3, Java 17 y MySQL. El objetivo principal es practicar y demostrar mis habilidades en el desarrollo de microservicios, la persistencia de datos con Hibernate y el uso de las últimas características de Java.
+> **Status:** a Java 17 **object-oriented programming exercise**, not a production-ready car rental API. This branch implements the actual methods and relationships from [the provided UML diagram](images/uml-car-rental.png).
 
-## Descripción
+The diagram is labeled *Sistema de alquiler de coches online*, but its classes primarily demonstrate **composition, aggregation, inheritance, interfaces, association, and dependency**. Building booking REST endpoints is a separate future project, not part of this UML.
 
-Este microservicio permite gestionar el alquiler de coches, incluyendo:
+## Implemented UML methods
 
-* **Gestión de clientes:** Registro, modificación y consulta de información de clientes.
-* **Gestión de vehículos:** Registro, modificación y consulta de información de vehículos disponibles.
-* **Gestión de alquileres:** Registro, modificación y consulta de alquileres, incluyendo la asignación de vehículos a clientes.
-* **Consulta de disponibilidad:** Permite a los clientes consultar la disponibilidad de vehículos por fechas.
-* **Implementación de las relaciones y clases definidas en el diagrama UML proporcionado.**
+| Original UML | English code | Java class |
+| --- | --- | --- |
+| `Humano.setHead(Cabeza)` | `setHead(Head)` | `Human` |
+| `Humano.setBody(Cuerpo)` | `setBody(Body)` | `Human` |
+| `Humano.display()` | `display()` | `Human` |
+| `Conductor.addCar(Coche)` | `addCar(Car)` | `Driver` |
+| `Conductor de autobús.wearClothes(Ropa)` | `wearClothes(Clothes)` | `BusDriver` |
+| `Conductor de autobús.wearHat(Sombrero)` | `wearHat(Hat)` | `BusDriver` |
+| `Conductor de autobús.show()` | `show()` | `BusDriver` |
+| `Vehículo.run()` | `run()` | `Vehicle` interface |
+| `Barco.run()` | `run()` | `Boat` |
+| `Coche.addDriver(Conductor)` | `addDriver(Driver)` | `Car` |
 
-El proyecto sigue el diagrama UML proporcionado como guía para la implementación de las clases y relaciones entre ellas.
+`Car.run()` implements the `Vehicle.run()` contract as well.
 
-## Diagrama UML
+## Relationships
 
-![Diagrama UML del sistema de alquiler de coches](images/uml-car-rental.png)
+- **Composition:** `Human` owns references to `Head` and `Body` (assigned through the UML setters).
+- **Inheritance:** `BusDriver extends Driver extends Human`; `Bus` and `Taxi` extend `Car`.
+- **Aggregation:** `BusDriver` references externally created `Clothes` and `Hat`.
+- **Interface implementation:** `Car` and `Boat` implement `Vehicle`.
+- **Association:** `Driver.addCar()` and `Car.addDriver()` keep both sides synchronized and do not allow duplicate references.
+- **Dependency:** `Car.runWith(Petroleum)` accepts a fuel type as a method argument without storing it.
 
-## Stack Tecnológico
+### Design notes / Clarifications
 
-* **Lenguaje:** Java 17
-* **Framework:** Spring Boot 3
-* **Base de datos:** MySQL
-* **Persistencia:** Hibernate 
+The UML uses a dashed realization arrow for `Conductor` → `Humano` even though `Humano` is shown as a concrete class: Java uses **class inheritance** here. Some multiplicities say 1:1 while the driver/car properties are arrays: this implementation follows the **array/list** properties and permits multiple associations. Since the UML does not specify return types, `run()`, `display()` and `show()` return strings for observable, testable behavior.
 
-## Funcionalidades Principales
+This exercise deliberately does **not** expose HTTP endpoints or use JPA/MySQL yet. The original Spring Boot entry point is preserved, but the learning model is pure Java. The previous, incomplete entity classes were replaced by the UML domain classes. A later REST/database layer can be added separately.
 
-* Endpoints REST para la gestión de clientes, vehículos y alquileres.
-* Persistencia de datos en MySQL utilizando Hibernate.
-* Manejo de excepciones y validaciones.
-* Implementación de patrones de diseño (DAO, DTO, etc.).
-* Implementación de las relaciones definidas en el UML, como composición, agregación, herencia, asociación, realización y dependencia.
+## Run tests
 
-## Patrones de Diseño
+Requires JDK 17. No database or credentials are needed.
 
-* **DAO (Data Access Object):** Para la capa de acceso a datos.
-* **DTO (Data Transfer Object):** Para la transferencia de datos entre capas.
-* **Implementación de las relaciones del UML:** Se han implementado las relaciones de composición, agregación, herencia, asociación, realización y dependencia según el diagrama UML proporcionado.
+```bash
+./gradlew test
+```
 
-## Próximos Pasos
+On Windows:
 
-* Implementar pruebas unitarias y de integración.
-* Agregar autenticación y autorización.
-* Mejorar la interfaz de usuario (si se incluye una).
-* Documentar la API con Swagger o OpenAPI.
-* Implementar servicios para la generación de informes y estadísticas.
+```powershell
+gradlew.bat test
+```
 
-## Autor
+CI runs these tests on each pull request.
 
-[samantonio91] ((https://github.com/samantonio91))
+## What's next?
 
-## Contacto
+- Build an actual rental domain (customers, vehicles, reservations, availability) in a separate feature.
+- Introduce REST controllers, validation, persistence and integration testing only when that domain is designed.
+- If persisted data from the older JPA prototype exists, plan an explicit migration rather than assuming these pure-Java classes map to the old tables.
 
-[sam.antonio.91@gmail.com]
+## Spanish reference
+
+See [README.es.md](README.es.md). Original UML: [images/uml-car-rental.png](images/uml-car-rental.png).
